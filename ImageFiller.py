@@ -90,17 +90,14 @@ class ImageFiller:
                     print(f"Color: {fill_color}")
                     self.bucket_fill(seed_point, fill_color)
 
-                    # Load and paste the Pokémon sprite onto the filled_image
                     pokemon_image = Image.open(f"images/pokemons/{pokemon_asociado}.png")
-                    pokemon_image = pokemon_image.resize((110, 110))  # Adjust the size as needed
-                    # Get the dimensions of the Pokémon image
+                    pokemon_image = pokemon_image.resize((110, 110))
+
                     pokemon_width, pokemon_height = pokemon_image.size
 
-                    # Calculate the coordinates for pasting the Pokémon image from the center
                     paste_x = seed_point[0] - pokemon_width // 2
                     paste_y = seed_point[1] - pokemon_height // 2
 
-                    # Paste the resized Pokémon sprite onto the filled_image at the adjusted coordinates
                     self.filled_image.paste(pokemon_image, (paste_x, paste_y), pokemon_image)
 
                     print()

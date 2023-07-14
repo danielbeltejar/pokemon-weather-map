@@ -1,12 +1,14 @@
 import uuid
 from datetime import datetime
+import os
+from dotenv import load_dotenv
 
 from ImageFiller import ImageFiller
 
-# Obtén tu clave de API de OpenWeatherMap
-api_key = "6b5c8c87c1b593c6acef24500942bcc5"
+load_dotenv()
 
-# Diccionario de asignación de Pokémon a estados del tiempo
+api_key = os.getenv("API_KEY")
+
 pokemons = {
     "clear sky": "Solrock",
     "clouds": "Togekiss",
@@ -30,7 +32,6 @@ pokemons = {
     "hail": "Avalugg"
 }
 
-# Temperature ranges and associated colors
 temperature_ranges = [
     {"range": (-100.0, 0.0), "color": (135, 206, 250, 255)},  # Light Blue
     {"range": (0.0, 2.5), "color": (163, 200, 225, 255)},  # Sky Blue
@@ -54,7 +55,6 @@ temperature_ranges = [
     {"range": (45.0, 100.0), "color": (128, 0, 0, 255)}  # Maroon
 ]
 
-# Lista de provincias de España
 provincias = {
     "Ceuta": "523,1314",
     "Melilla": "806,1351",
@@ -118,16 +118,12 @@ provincias = {
     "Zaragoza": "966,554"
 }
 
-# URL base de la API de OpenWeatherMap
 base_url = "https://api.openweathermap.org/data/2.5/weather"
 
-# Crear una instancia de ImageFiller
 image_filler = ImageFiller("images/spain.png", pokemons, temperature_ranges, api_key)
 
-# Llenar la imagen
 image_filler.fill_image()
 
-# Guardar y mostrar la imagen modificada
 image_filler.save_image(f"images/output/spain/{datetime.now().strftime('%Y%m%d')}.{uuid.uuid4()}.jpg")
 
 exit()
