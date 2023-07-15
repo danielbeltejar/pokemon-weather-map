@@ -124,6 +124,10 @@ image_filler = ImageFiller("images/spain.png", pokemons, temperature_ranges, api
 
 image_filler.fill_image()
 
-image_filler.save_image(f"images/output/spain/{datetime.now().strftime('%Y%m%d')}.{uuid.uuid4()}.jpg")
+output_dir = "images/output/spain"
+os.makedirs(output_dir, exist_ok=True)
+
+filename = f"{datetime.now().strftime('%Y%m%d')}.{uuid.uuid4()}.jpg"
+image_filler.save_image(os.path.join(output_dir, filename))
 
 exit()
