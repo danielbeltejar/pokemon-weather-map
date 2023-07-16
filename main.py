@@ -120,14 +120,21 @@ provincias = {
 
 base_url = "https://api.openweathermap.org/data/2.5/weather"
 
-image_filler = ImageFiller("images/spain.png", pokemons, temperature_ranges, api_key)
+image_filler = ImageFiller("images/spain.png", pokemons, temperature_ranges, api_key, True)
 
 image_filler.fill_image()
 
 output_dir = "images/output/spain"
 os.makedirs(output_dir, exist_ok=True)
 
-filename = f"{datetime.now().strftime('%Y%m%d')}.{uuid.uuid4()}.jpg"
-image_filler.save_image(os.path.join(output_dir, filename))
+current_date = datetime.now()
+year_month_day = current_date.strftime("%Y/%m/%d")
+
+subdirectory = os.path.join(output_dir, year_month_day)
+os.makedirs(subdirectory, exist_ok=True)
+
+filename = f"{uuid.uuid4()}.jpg"
+
+image_filler.save_image(os.path.join(subdirectory, filename))
 
 exit()
