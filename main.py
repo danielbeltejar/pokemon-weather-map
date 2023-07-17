@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from ImageFiller import ImageFiller
 
 load_dotenv()
-
+testing = bool(os.getenv("DEBUG")) if os.getenv("DEBUG") else False
 api_key = os.getenv("API_KEY")
 
 pokemons = {
@@ -120,7 +120,7 @@ provincias = {
 
 base_url = "https://api.openweathermap.org/data/2.5/weather"
 
-image_filler = ImageFiller("images/spain.png", pokemons, temperature_ranges, api_key, True)
+image_filler = ImageFiller("images/spain.png", pokemons, temperature_ranges, api_key, testing)
 
 image_filler.fill_image()
 

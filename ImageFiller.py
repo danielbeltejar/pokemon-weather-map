@@ -1,7 +1,10 @@
+import calendar
 import json
+import locale
 import os
 from datetime import datetime
 from time import sleep
+from typing import List, Dict, Tuple, Type
 
 import requests
 from PIL import Image, ImageFont, ImageDraw
@@ -9,7 +12,18 @@ from PIL import Image, ImageFont, ImageDraw
 from WeatherTranslations import WeatherTranslations
 
 
+class PointOfInterest:
+    def __init__(self, poi_name, pokemon, average_temperature):
+        self.poi_name = poi_name
+        self.pokemon = pokemon
+        self.average_temperature = average_temperature
+
+
+poi_list: List[PointOfInterest] = []
+
+
 class ImageFiller:
+
     def __init__(self, image_path, pokemons, temperature_ranges, api_key, request_data: bool = None):
         self.image = Image.open(image_path)
         self.image = self.image.convert("RGBA")  # Convert to RGBA mode for transparency support
@@ -21,6 +35,21 @@ class ImageFiller:
         self.api_key = api_key
         self.weather_conditions = []
         self.request_data = request_data
+
+    def associate_pokemon(self, average_temperature, weather_condition) -> list[str]:
+        weather_condition = weather_condition
+        pokemon: str = "Castform"
+        if average_temperature >= 36.0:
+            pokemon = weather_condition = "Charizard"
+        elif average_temperature >= 34.0:
+            pokemon = weather_condition = "Charmeleon"
+        elif average_temperature >= 32.0:
+            pokemon = weather_condition = "Charmander"
+        elif average_temperature <= 4.0:
+            pokemon = "Regice"
+        else:
+            pokemon = self.pokemons.get(weather_condition, "Castform")
+        return [pokemon.lower(), str(weather_condition.lower())]
 
     def bucket_fill(self, seed_point, fill_color):
         target_color = self.filled_image.getpixel(seed_point)
@@ -59,12 +88,12 @@ class ImageFiller:
             params = {}
             data = None
             response = None
-            if self.request_data is None or self.request_data is False:
+            if self.request_data is False:
+
                 params = {
                     "q": provincia + ",es",
                     "appid": self.api_key,
                     "units": "metric",
-                    "dt": int(datetime.now().replace(hour=12, minute=0, second=0).timestamp())
                 }
                 response = requests.get(base_url, params=params)
                 data = response.json()
@@ -77,38 +106,35 @@ class ImageFiller:
 
             if self.request_data or response.status_code == 200:
                 weather_condition = data["weather"][0]["description"]
-                temperatura = data["main"]["temp"]
+                temp_min = data['main']['temp_min']
+                temp_max = data['main']['temp_max']
 
-                if temperatura >= 36.0:
-                    pokemon_asociado = "Charizard"
-                    weather_condition = pokemon_asociado.lower()
-                elif temperatura >= 34.0:
-                    pokemon_asociado = "Charmeleon"
-                    weather_condition = pokemon_asociado.lower()
-                elif temperatura >= 32.0:
-                    pokemon_asociado = "Charmander"
-                    weather_condition = pokemon_asociado.lower()
-                elif temperatura <= 4.0:
-                    pokemon_asociado = "Regice"
-                else:
-                    pokemon_asociado = self.pokemons.get(weather_condition, "Castform")
-                pokemon_asociado = pokemon_asociado.lower()
+                average_temperature = (0.4 * temp_min) + (0.6 * temp_max)
+
+                associate = self.associate_pokemon(average_temperature, weather_condition)
+                pokemon = associate[0]
+                weather_condition = associate[1]
 
                 fill_color = None
                 for temp_range in self.temperature_ranges:
-                    if temp_range["range"][0] <= temperatura < temp_range["range"][1]:
+                    if temp_range["range"][0] <= average_temperature < temp_range["range"][1]:
                         fill_color = temp_range["color"]
                         break
 
                 if fill_color is not None:
-                    print(f"Provincia: {provincia}")
-                    print(f"Estado del tiempo: {weather_condition}")
-                    print(f"Pokémon asociado: {pokemon_asociado}")
-                    print(f"Temperatura: {temperatura}°C")
+                    print(f"POI: {provincia}")
+                    print(f"Weather condition: {weather_condition}")
+                    print(f"Pokémon: {pokemon}")
+                    print(f"Temp: {average_temperature}°C")
+                    print(f"Avg Temp: {average_temperature}°C")
                     print(f"Color: {fill_color}")
+
+                    poi = PointOfInterest(provincia, pokemon, average_temperature)
+                    poi_list.append(poi)
+
                     self.bucket_fill(seed_point, fill_color)
 
-                    pokemon_image = Image.open(f"images/pokemon/artwork/{pokemon_asociado}.png")
+                    pokemon_image = Image.open(f"images/pokemon/artwork/{pokemon}.png")
                     pokemon_image = pokemon_image.resize((110, 110))
 
                     pokemon_width, pokemon_height = pokemon_image.size
@@ -125,7 +151,7 @@ class ImageFiller:
 
                     print()
                 else:
-                    print(f"No se encontró un color adecuado para la temperatura {temperatura}°C")
+                    print(f"No se encontró un color adecuado para la temperatura {average_temperature}°C")
             if self.request_data:
                 continue
             sleep(0.05)
@@ -148,9 +174,17 @@ class ImageFiller:
             y += 60
             _vertical_count += 1
 
-        font = ImageFont.truetype(font_path, 56)
+        font = ImageFont.truetype(font_path, 64)
         W, H = (1600, 275)
-        title_text = "Pronostico julio 18"
+        locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
+
+        now = datetime.now()
+        month = now.strftime("%B")
+        day = now.strftime("%d")
+
+        title_text = f"Pronóstico {month} {day}"
+        text_color = (0, 0, 128)
+
         draw = ImageDraw.Draw(self.filled_image)
         _, _, w, h = draw.textbbox((0, 0), title_text, font=font)
         draw.text(((W - w) / 2, (H - h) / 2), title_text, font=font, fill=text_color)
