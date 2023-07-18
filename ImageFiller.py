@@ -2,7 +2,7 @@ import calendar
 import json
 import locale
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from time import sleep
 from typing import List, Dict, Tuple, Type
 
@@ -37,8 +37,19 @@ class ImageFiller:
         self.request_data = request_data
 
     def associate_pokemon(self, average_temperature, weather_condition) -> list[str]:
-        weather_condition = weather_condition
+        weather_condition: str = weather_condition.lower()
         pokemon: str = "Castform"
+
+        if weather_condition.__contains__("rain") or weather_condition.__contains__("drizzle"):
+            weather_condition = "rain"
+        elif weather_condition.__contains__("snow"):
+            weather_condition = "snow"
+        elif weather_condition.__contains__("sleet") or weather_condition.__contains__("hail"):
+            weather_condition = "hail"
+        elif weather_condition.__contains__("thunder"):
+            weather_condition = "thunderstorm"
+
+
         if average_temperature >= 36.0:
             pokemon = weather_condition = "Charizard"
         elif average_temperature >= 34.0:
@@ -48,7 +59,7 @@ class ImageFiller:
         elif average_temperature <= 4.0:
             pokemon = "Regice"
         else:
-            pokemon = self.pokemons.get(weather_condition, "Castform")
+            pokemon = self.pokemons.get(weather_condition)
         return [pokemon.lower(), str(weather_condition.lower())]
 
     def bucket_fill(self, seed_point, fill_color):
@@ -79,9 +90,8 @@ class ImageFiller:
     def fill_image(self):
         from main import provincias
 
-        base_url = "https://api.openweathermap.org/data/2.5/weather"
-
         for provincia, coords in provincias.items():
+            base_url = f"https://wttr.in/{provincia}?format=j1"
             x, y = map(int, coords.split(","))
             seed_point = (x, y)
 
@@ -105,11 +115,9 @@ class ImageFiller:
                         data = json.load(file)
 
             if self.request_data or response.status_code == 200:
-                weather_condition = data["weather"][0]["description"]
-                temp_min = data['main']['temp_min']
-                temp_max = data['main']['temp_max']
-
-                average_temperature = (0.4 * temp_min) + (0.6 * temp_max)
+                next_day_weather = data['weather'][1]  # Index 1 corresponds to the next day's weather
+                average_temperature = float(next_day_weather['avgtempC'])
+                weather_condition = next_day_weather['hourly'][3]['weatherDesc'][0]['value']
 
                 associate = self.associate_pokemon(average_temperature, weather_condition)
                 pokemon = associate[0]
@@ -124,9 +132,8 @@ class ImageFiller:
                 if fill_color is not None:
                     print(f"POI: {provincia}")
                     print(f"Weather condition: {weather_condition}")
-                    print(f"Pokémon: {pokemon}")
-                    print(f"Temp: {average_temperature}°C")
                     print(f"Avg Temp: {average_temperature}°C")
+                    print(f"Pokémon: {pokemon}")
                     print(f"Color: {fill_color}")
 
                     poi = PointOfInterest(provincia, pokemon, average_temperature)
@@ -178,9 +185,9 @@ class ImageFiller:
         W, H = (1600, 275)
         locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
 
-        now = datetime.now()
-        month = now.strftime("%B")
-        day = now.strftime("%d")
+        date = datetime.now() + timedelta(days=1)
+        month = date.strftime("%B")
+        day = date.strftime("%d")
 
         title_text = f"Pronóstico {month} {day}"
         text_color = (0, 0, 128)

@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 from dotenv import load_dotenv
 
@@ -10,26 +10,61 @@ testing = bool(os.getenv("DEBUG")) if os.getenv("DEBUG") else False
 api_key = os.getenv("API_KEY")
 
 pokemons = {
-    "clear sky": "Solrock",
-    "clouds": "Togekiss",
-    "few clouds": "Castform",
-    "scattered clouds": "Castform",
-    "broken clouds": "Castform",
-    "overcast clouds": "Togekiss",
-    "smoke": "Weezing",
-    "haze": "Sandslash",
-    "dust": "Sandslash",
-    "sand": "Sandslash",
-    "ash": "Sandslash",
-    "squalls": "Castform",
-    "tornado": "Thundurus",
     "rain": "Castform_rainy",
     "drizzle": "Castform_rainy",
-    "thunderstorm": "Zapdos",
+    "hail": "Avalugg",
     "snow": "Articuno",
-    "mist": "Articuno",
+    "thunderstorm": "Zapdos",
+    "clear": "Solrock",
+    "sunny": "Solrock",
+    "cloudy": "Togekiss",
+    "partly cloudy": "Castform",
+    "overcast": "Togekiss",
+    "mist": "Gengar",
     "fog": "Gengar",
-    "hail": "Avalugg"
+    "freezing fog": "Gengar",
+    "patchy rain nearby": "Castform_rainy",
+    "patchy rain possible": "Castform_rainy",
+    "patchy light drizzle": "Castform_rainy",
+    "light rain shower": "Castform_rainy",
+    "moderate rain at times": "Castform_rainy",
+    "heavy rain at times": "Castform_rainy",
+    "moderate or heavy rain shower": "Castform_rainy",
+    "patchy light snow": "Articuno",
+    "light snow": "Articuno",
+    "light snow showers": "Articuno",
+    "patchy heavy snow": "Articuno",
+    "moderate or heavy snow showers": "Articuno",
+    "moderate or heavy snow in area with thunder": "Articuno",
+    "patchy snow nearby": "Articuno",
+    "light sleet showers": "Articuno",
+    "moderate or heavy sleet showers": "Articuno",
+    "light showers of ice pellets": "Avalugg",
+    "thundery outbreaks in nearby": "Zapdos",
+    "patchy light rain in area with thunder": "Zapdos",
+    "patchy light snow in area with thunder": "Zapdos",
+    "light rain": "Castform_rainy",
+    "light drizzle": "Castform_rainy",
+    "patchy light rain": "Castform_rainy",
+    "moderate rain": "Castform_rainy",
+    "heavy rain": "Castform_rainy",
+    "torrential rain shower": "Castform_rainy",
+    "blowing snow": "Articuno",
+    "moderate or heavy sleet": "Articuno",
+    "blizzard": "Articuno",
+    "patchy moderate snow": "Articuno",
+    "moderate snow": "Articuno",
+    "heavy snow": "Articuno",
+    "patchy sleet nearby": "Articuno",
+    "patchy freezing drizzle nearby": "Castform_rainy",
+    "freezing drizzle": "Articuno",
+    "heavy freezing drizzle": "Articuno",
+    "light freezing rain": "Articuno",
+    "moderate or heavy freezing rain": "Articuno",
+    "light sleet": "Articuno",
+    "ice pellets": "Avalugg",
+    "moderate or heavy showers of ice pellets": "Avalugg",
+    "moderate or heavy rain in area with thunder": "Avalugg"
 }
 
 temperature_ranges = [
@@ -127,8 +162,9 @@ image_filler.fill_image()
 output_dir = "images/output/spain"
 os.makedirs(output_dir, exist_ok=True)
 
-current_date = datetime.now()
-year_month_day = current_date.strftime("%Y/%m/%d")
+tomorrow_date = datetime.now() + timedelta(days=1)
+
+year_month_day = tomorrow_date.strftime("%Y/%m/%d")
 
 subdirectory = os.path.join(output_dir, year_month_day)
 os.makedirs(subdirectory, exist_ok=True)
