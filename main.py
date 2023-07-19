@@ -7,7 +7,6 @@ from ImageFiller import ImageFiller
 
 load_dotenv()
 testing = bool(os.getenv("DEBUG")) if os.getenv("DEBUG") else False
-api_key = os.getenv("API_KEY")
 
 pokemons = {
     "hot": "Charmander",
@@ -159,7 +158,7 @@ provincias = {
 
 base_url = "https://api.openweathermap.org/data/2.5/weather"
 
-image_filler = ImageFiller("images/spain.png", pokemons, temperature_ranges, api_key, testing)
+image_filler = ImageFiller("images/spain.png", pokemons, temperature_ranges, testing)
 
 image_filler.fill_image()
 
@@ -173,7 +172,7 @@ year_month_day = tomorrow_date.strftime("%Y/%m/%d")
 subdirectory = os.path.join(output_dir, year_month_day)
 os.makedirs(subdirectory, exist_ok=True)
 
-filename = f"{uuid.uuid4()}.jpg"
+filename = f"{uuid.uuid4()}.webp"
 
 image_filler.save_image(os.path.join(subdirectory, filename))
 

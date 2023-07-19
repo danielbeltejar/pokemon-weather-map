@@ -24,7 +24,7 @@ poi_list: List[PointOfInterest] = []
 
 class ImageFiller:
 
-    def __init__(self, image_path, pokemons, temperature_ranges, api_key, request_data: bool = None):
+    def __init__(self, image_path, pokemons, temperature_ranges, request_data: bool = None):
         self.image = Image.open(image_path)
         self.image = self.image.convert("RGBA")  # Convert to RGBA mode for transparency support
         self.width, self.height = self.image.size
@@ -32,7 +32,6 @@ class ImageFiller:
         self.filled_image.paste(self.image, (0, 0))
         self.pokemons = pokemons
         self.temperature_ranges = temperature_ranges
-        self.api_key = api_key
         self.weather_conditions = []
         self.request_data = request_data
 
@@ -93,17 +92,11 @@ class ImageFiller:
             x, y = map(int, coords.split(","))
             seed_point = (x, y)
 
-            params = {}
             data = None
             response = None
             if self.request_data is False:
 
-                params = {
-                    "q": provincia + ",es",
-                    "appid": self.api_key,
-                    "units": "metric",
-                }
-                response = requests.get(base_url, params=params)
+                response = requests.get(base_url)
                 data = response.json()
             else:
                 filename = f"{provincia}.json"
@@ -196,5 +189,5 @@ class ImageFiller:
         draw.text(((W - w) / 2, (H - h) / 2), title_text, font=font, fill=text_color)
 
     def save_image(self, output_path):
-        self.filled_image.convert("RGB").save(output_path, "JPEG", quality=90)
+        self.filled_image.convert("RGB").save(output_path, "WEBP", quality=85)
         self.filled_image.show()
