@@ -1,6 +1,10 @@
 class WeatherTranslations:
     def __init__(self):
         self.translations = {
+            "hot": "Calor",
+            "hotter": "Sofocante",
+            "hottest": "Abrasador",
+            "frozen": "Helado",
             "rain": "Lluvia",
             "drizzle": "Lluvia",
             "hail": "Granizo",
@@ -60,3 +64,9 @@ class WeatherTranslations:
 
     def translate(self, weather):
         return self.translations.get(weather, "Desconocido")
+
+    def get_first_key_by_value(self, value):
+        for key, val in self.translations.items():
+            if val == value:
+                return key
+        return None

@@ -10,6 +10,10 @@ testing = bool(os.getenv("DEBUG")) if os.getenv("DEBUG") else False
 api_key = os.getenv("API_KEY")
 
 pokemons = {
+    "hot": "Charmander",
+    "hotter": "Charmeleon",
+    "hottest": "Charizard",
+    "frozen": "Regice",
     "rain": "Castform_rainy",
     "drizzle": "Castform_rainy",
     "hail": "Avalugg",
@@ -81,9 +85,9 @@ temperature_ranges = [
     {"range": (22.5, 25.0), "color": (50, 205, 50, 255)},  # Lime Green (Web)
     {"range": (25.0, 27.5), "color": (255, 255, 0, 255)},  # Yellow
     {"range": (27.5, 30.0), "color": (255, 215, 0, 255)},  # Gold
-    {"range": (30.0, 32.5), "color": (255, 165, 0, 255)},  # Orange
-    {"range": (32.5, 35.0), "color": (255, 140, 0, 255)},  # Dark Orange
-    {"range": (35.0, 37.5), "color": (255, 69, 0, 255)},  # Orange Red
+    {"range": (30.0, 32.0), "color": (255, 165, 0, 255)},  # Orange
+    {"range": (32.0, 34.0), "color": (255, 140, 0, 255)},  # Dark Orange
+    {"range": (34.0, 37.5), "color": (255, 69, 0, 255)},  # Orange Red
     {"range": (37.5, 40.0), "color": (255, 0, 0, 255)},  # Red
     {"range": (40.0, 42.5), "color": (139, 0, 0, 255)},  # Dark Red
     {"range": (42.5, 45.0), "color": (128, 0, 0, 255)},  # Maroon

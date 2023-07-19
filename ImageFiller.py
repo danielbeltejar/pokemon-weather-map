@@ -1,14 +1,14 @@
-import calendar
 import json
 import locale
 import os
 from datetime import datetime, timedelta
 from time import sleep
-from typing import List, Dict, Tuple, Type
+from typing import List
 
 import requests
 from PIL import Image, ImageFont, ImageDraw
 
+from PokemonImage import PokemonImage
 from WeatherTranslations import WeatherTranslations
 
 
@@ -38,7 +38,6 @@ class ImageFiller:
 
     def associate_pokemon(self, average_temperature, weather_condition) -> list[str]:
         weather_condition: str = weather_condition.lower()
-        pokemon: str = "Castform"
 
         if weather_condition.__contains__("rain") or weather_condition.__contains__("drizzle"):
             weather_condition = "rain"
@@ -49,17 +48,16 @@ class ImageFiller:
         elif weather_condition.__contains__("thunder"):
             weather_condition = "thunderstorm"
 
-
         if average_temperature >= 36.0:
-            pokemon = weather_condition = "Charizard"
+            weather_condition = "hottest"
         elif average_temperature >= 34.0:
-            pokemon = weather_condition = "Charmeleon"
+            weather_condition = "hotter"
         elif average_temperature >= 32.0:
-            pokemon = weather_condition = "Charmander"
-        elif average_temperature <= 4.0:
-            pokemon = "Regice"
-        else:
-            pokemon = self.pokemons.get(weather_condition)
+            weather_condition = "hot"
+        elif average_temperature <= 5.0:
+            weather_condition = "frozen"
+
+        pokemon = self.pokemons.get(weather_condition)
         return [pokemon.lower(), str(weather_condition.lower())]
 
     def bucket_fill(self, seed_point, fill_color):
@@ -120,7 +118,7 @@ class ImageFiller:
                 weather_condition = next_day_weather['hourly'][3]['weatherDesc'][0]['value']
 
                 associate = self.associate_pokemon(average_temperature, weather_condition)
-                pokemon = associate[0]
+                pokemon_name = associate[0]
                 weather_condition = associate[1]
 
                 fill_color = None
@@ -133,23 +131,16 @@ class ImageFiller:
                     print(f"POI: {provincia}")
                     print(f"Weather condition: {weather_condition}")
                     print(f"Avg Temp: {average_temperature}°C")
-                    print(f"Pokémon: {pokemon}")
+                    print(f"Pokémon: {pokemon_name}")
                     print(f"Color: {fill_color}")
 
-                    poi = PointOfInterest(provincia, pokemon, average_temperature)
+                    poi = PointOfInterest(provincia, pokemon_name, average_temperature)
                     poi_list.append(poi)
 
                     self.bucket_fill(seed_point, fill_color)
 
-                    pokemon_image = Image.open(f"images/pokemon/artwork/{pokemon}.png")
-                    pokemon_image = pokemon_image.resize((110, 110))
-
-                    pokemon_width, pokemon_height = pokemon_image.size
-
-                    paste_x = seed_point[0] - pokemon_width // 2
-                    paste_y = seed_point[1] - pokemon_height // 2
-
-                    self.filled_image.paste(pokemon_image, (paste_x, paste_y), pokemon_image)
+                    pokemon_image = PokemonImage(self.filled_image, (x, y), (110, 110), pokemon_name, artwork=True)
+                    pokemon_image.paste_pokemon_on_filled_image()
 
                     translated_weather = WeatherTranslations().translate(weather_condition)
 
@@ -169,15 +160,23 @@ class ImageFiller:
         text_color = (0, 0, 0)
 
         _vertical_count = 0
-        x = 38
-        y = 1392
+        x = 110
+        y = 1398
         for weather_condition in self.weather_conditions:
             if _vertical_count >= 3:
-                x += 600
-                y = 1392
+                x += 515
+                y = 1398
                 _vertical_count = 0
 
             ImageDraw.Draw(self.filled_image).text((x, y), weather_condition, font=font, fill=text_color)
+
+            weather_translations = WeatherTranslations()
+
+            pokemon_name = self.pokemons.get(weather_translations.get_first_key_by_value(weather_condition))
+            pokemon_custom_offset = PokemonImage(self.filled_image, (x, y), (96, 72), pokemon_name, artwork=False,
+                                                 x_offset=-42, y_offset=16)
+            pokemon_custom_offset.paste_pokemon_on_filled_image()
+
             y += 60
             _vertical_count += 1
 
