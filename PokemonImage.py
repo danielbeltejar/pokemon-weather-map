@@ -7,7 +7,8 @@ class PokemonImage:
         self.pokemon_image = self._load_pokemon_image(pokemon, artwork, size)
         self.paste_x, self.paste_y = self._calculate_paste_coordinates(coords, x_offset, y_offset)
 
-    def _load_pokemon_image(self, pokemon, artwork, size):
+    def _load_pokemon_image(self, pokemon: str, artwork, size):
+        pokemon = pokemon.lower()
         folder = "artwork" if artwork else "pixel"
         image_path = f"images/pokemon/{folder}/{pokemon}.png"
         pokemon_image = Image.open(image_path).convert("RGBA")
