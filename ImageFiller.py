@@ -13,11 +13,12 @@ from WeatherTranslations import WeatherTranslations
 
 
 class PointOfInterest:
-    def __init__(self, poi_name, pokemon, average_temperature):
+    def __init__(self, poi_name, pokemon, average_temperature, x, y):
         self.poi_name = poi_name
         self.pokemon = pokemon
         self.average_temperature = average_temperature
-
+        self.x = x
+        self.y = y
 
 poi_list: List[PointOfInterest] = []
 
@@ -127,7 +128,7 @@ class ImageFiller:
                     print(f"Pokémon: {pokemon_name}")
                     print(f"Color: {fill_color}")
 
-                    poi = PointOfInterest(provincia, pokemon_name, average_temperature)
+                    poi = PointOfInterest(provincia, pokemon_name, average_temperature, x, y)
                     poi_list.append(poi)
 
                     self.bucket_fill(seed_point, fill_color)
@@ -155,6 +156,11 @@ class ImageFiller:
         _vertical_count = 0
         x = 110
         y = 1398
+
+        for poi in poi_list:
+            ImageDraw.Draw(self.filled_image).text((poi.x + 20, poi.y - 40), str(int(poi.average_temperature)) + "c",
+                                                   font=ImageFont.truetype(font_path, 24), fill=(140,140,140))
+
         for weather_condition in self.weather_conditions:
             if _vertical_count >= 3:
                 x += 515
@@ -172,6 +178,11 @@ class ImageFiller:
 
             y += 60
             _vertical_count += 1
+
+        if len(self.weather_conditions) < 8:
+            legend_image = Image.open("images/misc/legend.png")
+            legend_image = legend_image.convert("RGBA")
+            self.filled_image.paste(legend_image, (1250, 1465), legend_image)
 
         font = ImageFont.truetype(font_path, 64)
         W, H = (1600, 275)

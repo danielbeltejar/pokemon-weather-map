@@ -1,6 +1,8 @@
 import uuid
 from datetime import datetime, timedelta
 import os
+from time import sleep
+
 from dotenv import load_dotenv
 
 from ImageFiller import ImageFiller
@@ -159,8 +161,16 @@ provincias = {
 base_url = "https://api.openweathermap.org/data/2.5/weather"
 
 image_filler = ImageFiller("images/spain.png", pokemons, temperature_ranges, testing)
+success = False
 
-image_filler.fill_image()
+while not success:
+    try:
+        image_filler.fill_image()
+        success = True
+    except Exception as e:
+        print(f"Error: {e}")
+        sleep(300)
+
 
 output_dir = "images/output/spain"
 os.makedirs(output_dir, exist_ok=True)
