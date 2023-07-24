@@ -48,11 +48,11 @@ class ImageFiller:
         elif weather_condition.__contains__("thunder"):
             weather_condition = "thunderstorm"
 
-        if average_temperature >= 36.0:
+        if average_temperature >= 34.0:
             weather_condition = "hottest"
-        elif average_temperature >= 34.0:
-            weather_condition = "hotter"
         elif average_temperature >= 32.0:
+            weather_condition = "hotter"
+        elif average_temperature >= 30.0:
             weather_condition = "hot"
         elif average_temperature <= 5.0:
             weather_condition = "frozen"
@@ -109,7 +109,17 @@ class ImageFiller:
             if self.request_data or response.status_code == 200:
                 next_day_weather = data['weather'][1]  # Index 1 corresponds to the next day's weather
                 average_temperature = float(next_day_weather['avgtempC'])
-                weather_condition = next_day_weather['hourly'][3]['weatherDesc'][0]['value']
+
+                weather_desc_count = {}
+
+                for entry in next_day_weather["hourly"]:
+                    weather_desc_value = entry['weatherDesc'][0]['value']
+                    if weather_desc_value in weather_desc_count:
+                        weather_desc_count[weather_desc_value] += 1
+                    else:
+                        weather_desc_count[weather_desc_value] = 1
+
+                weather_condition = max(weather_desc_count, key=weather_desc_count.get)
 
                 associate = self.associate_pokemon(average_temperature, weather_condition)
                 pokemon_name = associate[0]
@@ -200,5 +210,6 @@ class ImageFiller:
         draw.text(((W - w) / 2, (H - h) / 2), title_text, font=font, fill=text_color)
 
     def save_image(self, output_path):
-        self.filled_image.convert("RGB").save(output_path, "WEBP", quality=85)
+        self.filled_image = self.filled_image.resize((1080, 1080), resample=Image.BILINEAR)
+        self.filled_image.convert("RGB").save(output_path, "WEBP", quality=80)
         self.filled_image.show()
