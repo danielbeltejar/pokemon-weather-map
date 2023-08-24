@@ -1,14 +1,14 @@
 FROM python:3.11-slim
 ENV PYTHONUNBUFFERED 1
 
-# Create the app directory
-RUN mkdir /app
-COPY . /app
+# Set the working directory for the application
 WORKDIR /app
+
+# Copy the application files
+COPY . .
 
 # Install project dependencies
 RUN pip install --no-cache-dir -r requirements.txt
-
 
 # Expose the port
 EXPOSE 8000
