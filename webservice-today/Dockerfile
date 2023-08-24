@@ -6,8 +6,7 @@ RUN mkdir /app
 COPY . /app
 WORKDIR /app
 
-# Copy the requirements file and install project dependencies
-COPY requirements.txt .
+# Install project dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 
