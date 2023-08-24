@@ -14,7 +14,7 @@ ENV LC_ALL es_ES.UTF-8
 WORKDIR /app
 
 # Copy the application files
-COPY ../backend-a .
+COPY . .
 
 # Install project dependencies
 RUN pip install --no-cache-dir -r requirements.txt
