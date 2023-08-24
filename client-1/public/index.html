@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PokeWeather Forecast</title>
+    <link href="assets/css/styles.css" rel="stylesheet">
+
+    <script type="text/javascript">
+        (function (c, l, a, r, i, t, y) {
+            c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+            t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+            y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+        })(window, document, "clarity", "script", "6n7dkmur2b");
+    </script>
+</head>
+
+<body class="lg:bg-gray-200 bg-white">
+    <div
+        class="flex flex-col container mx-auto h-full w-full mt-8 p-6 lg:h-[46rem] max-w-sm bg-white lg:rounded-md lg:shadow-sm">
+        <img src="assets/images/pokeweather.png" alt="PokeWeather Logo" class="w-auto h-auto mb-4 drop-shadow-md">
+        <label for="datePicker" class="block mb-2 border w-fit px-4 rounded">Select a Date</label>
+        <div class="flex flex-row gap-3 lg:flex-col mb-5">
+            <input type="date" id="datePicker" class="w-full py-2 px-4 border rounded hover:border-blue-400 transition-colors">
+            <button style="background-image: url('assets/images/water_tile.png');" id="submitBtn"
+                class="bg-repeat flex-shrink-0 h-11 py-2 px-4 bg-blue-500  font-semibold text-white rounded hover:bg-blue-600">Get
+                Forecast</button>
+        </div>
+        <div class="flex flex-row justify-evenly items-center gap-3 bg-gray-200 rounded-xl min-h-[80px] relative z-0">
+            <div class="map rounded-md hover:border-blue-600 active:border-blue-600 cursor-pointer">
+                <img src="assets/images/country_es.png" alt="Spain" class="w-16 h-auto rounded-md">
+            </div>
+            <div class="map rounded-md hover:border-blue-600 active:border-blue-60 cursor-pointer">
+                <img src="assets/images/country_us.png" alt="United States" class="w-16 h-auto rounded-md">
+            </div>
+            <div class="map rounded-md hover:border-blue-600 active:border-blue-600 cursor-pointer">
+                <img src="assets/images/country_de.png" alt="Germany" class="w-16 h-auto rounded-md">
+            </div>
+            <div class="map rounded-md hover:border-blue-600 active:border-blue-600 cursor-pointer">
+                <img src="assets/images/country_jp.png" alt="Japan" class="w-16 h-auto rounded-md">
+            </div>
+            <span id="movingSpan"
+                class="-z-10 bg-blue-600 w-[80px] h-[80px] absolute transition-all duration-200 rounded-xl"></span>
+        </div>
+        <div id="result" class="font-bold mt-4 mb-4"></div>
+        <div onclick="zoomInImage(this)" class="image-container mt-auto mb-0 cursor-zoom-in">
+            <img class="bg-cover bg-repeat bg-gray-100" src="https://weather.danielbeltejar.es/v1/forecast/today"
+                alt="Weather Forecast Image"
+                style="background-image: url('data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAAABAAD/4QMxaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA3LjItYzAwMCA3OS41NjZlYmM1YjQsIDIwMjIvMDUvMDktMDg6MjU6NTUgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCAyMy40IChNYWNpbnRvc2gpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkQ1RDlCMEM2MUYxRjExRUU4RTcxQzUzQ0E1RDg2NTJCIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkQ1RDlCMEM3MUYxRjExRUU4RTcxQzUzQ0E1RDg2NTJCIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6Nzc4OEQ0N0YxRjFFMTFFRThFNzFDNTNDQTVEODY1MkIiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6Nzc4OEQ0ODAxRjFFMTFFRThFNzFDNTNDQTVEODY1MkIiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7/7gAOQWRvYmUAZMAAAAAB/9sAhAAaGRknHCc+JSU+Qi8vL0JHPTs7PUdHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHARwnJzMmMz0mJj1HPTI9R0dHRERHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0f/wAARCAAwADADASIAAhEBAxEB/8QAewAAAgMBAQAAAAAAAAAAAAAAAgQBAwUABgEBAQEBAQAAAAAAAAAAAAAAAwIBBAUQAAEDAgMFBwUAAAAAAAAAAAEAEQIhAzFhEvBBUSIEgbHhUnKSFJHB0UITEQACAgEDBAMAAAAAAAAAAAABAgAREiExA0FxwdEiMhP/2gAMAwEAAhEDEQA/APSSlTlIQa5HAxQXRIw5cVm3TK3XAHJSzY9NIZahc1tUm/V1Oo7mWJ8mbUlntkmOn6i4Zku43o/2WrkryhjQmnKUqs2TqYypzEPklvlESYiithLVHVxVpyK/1jMCsLFglOtjO40Ymm8Oznd902H1Dgl70hGRO2Hei52KrpMVchUyLQi41u21E9ECFAqSBIuRn9UQkSQOxcDW58Rk4sB8q7+47asgjVKr1V39Imgqu0ypXDFEIiILBl6iKEFLOcm95zOl71reO1UDQRiPcrIi0zExJzmtZQ4oyhamxIh0pAckBWwtC2DJwTxVei35ot60cY2cJGLetSEVdhKJZtzDdsQ7Yy/CGXOYiILYk9w7VLdPxHu8VExY0liHbzeKSHjP/9k=');">
+        </div>
+    </div>
+    <div class="flex flex-row gap-4 justify-center mt-2 text-gray-700 drop-shadow-lg">
+        <a href="https://danielbeltejar.es">Made by Daniel Beltejar </a>
+        <p>·</p>
+        <a href="https://github.com/danielbeltejar?tab=repositories&q=pokemon-weather&type=&language=&sort=es">GitHub
+        </a>
+    </div>
+    <div id="zoomed-image-container"
+        class="hidden lg:block absolute h-full w-auto top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] lg:cursor-zoom-out">
+    </div>
+    <script src="assets/scripts/date_selector.js"></script>
+    <script src="assets/scripts/map_selector.js"></script>
+    <script src="assets/scripts/map_zoom.js"></script>
+</body>
+
+</html>
