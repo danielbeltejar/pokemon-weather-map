@@ -2,7 +2,7 @@
 FROM nginx:latest
 
 # Copy your HTML website files to the Nginx webroot directory
-COPY ./public/* /usr/share/nginx/html
+COPY ./public/ /usr/share/nginx/html
 
 # Copy your custom nginx.conf to the Nginx configuration directory
 COPY ./nginx.conf /etc/nginx/nginx.conf
