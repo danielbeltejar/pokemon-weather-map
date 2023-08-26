@@ -1,6 +1,6 @@
 const submitBtn = document.getElementById("submitBtn");
 const datePicker = document.getElementById("datePicker");
-const resultDiv = document.getElementById("result");
+const resultDiv = document.getElementById("submitBtn");
 const imageContainer = document.getElementById("imageContainer");
 
 submitBtn.addEventListener("click", () => {
@@ -26,12 +26,13 @@ submitBtn.addEventListener("click", () => {
         const imageUrl = URL.createObjectURL(blob);
         const image = document.getElementById("forecast-image");
         image.src = imageUrl;
+        resultDiv.textContent = "Get Forecast";
       })
       .catch((error) => {
         console.error("Error fetching and displaying image:", error);
-        resultDiv.textContent = "An error occurred while fetching the forecast.";
+        resultDiv.textContent = "No forecast yet";
       });
   } else {
-    resultDiv.textContent = "Please select a date.";
+    resultDiv.textContent = "Please select a date";
   }
 });
