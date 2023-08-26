@@ -1,4 +1,4 @@
-package com.example.polemonweathermap.config;
+package es.danielbeltejar.weather.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

@@ -1,4 +1,4 @@
-package com.example.polemonweathermap.services;
+package es.danielbeltejar.weather.services;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

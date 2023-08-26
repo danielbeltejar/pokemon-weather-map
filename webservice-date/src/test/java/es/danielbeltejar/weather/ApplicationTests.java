@@ -1,10 +1,10 @@
-package com.example.polemonweathermap;
+package es.danielbeltejar.weather;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PolemonWeatherMapApplicationTests {
+class ApplicationTests {
 
     @Test
     void contextLoads() {
