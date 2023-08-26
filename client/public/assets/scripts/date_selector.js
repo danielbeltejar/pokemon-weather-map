@@ -7,33 +7,28 @@ submitBtn.addEventListener("click", () => {
   const selectedDate = datePicker.value;
 
   if (selectedDate) {
-    const url = "https://weather.danielbeltejar.es/v1/forecast";
-    const data = {
-      date: selectedDate,
-    };
+    const url = "https://weather.danielbeltejar.es/v1/date/forecast?datePicker=" + selectedDate;
 
     fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
     })
-      .then((response) => response.json())
-      .then((forecast) => {
-        resultDiv.textContent = `Weather forecast for ${selectedDate}: ${JSON.stringify(forecast)}`;
-
-        if (forecast.base64Image) {
-          const image = document.createElement("img");
-          image.src = `data:image/png;base64,${forecast.base64Image}`;
-          imageContainer.innerHTML = "";
-          imageContainer.appendChild(image);
+      .then((response) => {
+        if (response.ok) {
+          return response.blob(); 
         } else {
-          imageContainer.innerHTML = "No image available.";
+          throw new Error("Network response was not ok.");
         }
       })
+      .then((blob) => {
+        const imageUrl = URL.createObjectURL(blob);
+        const image = document.getElementById("forecast-image");
+        image.src = imageUrl;
+      })
       .catch((error) => {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching and displaying image:", error);
         resultDiv.textContent = "An error occurred while fetching the forecast.";
       });
   } else {
