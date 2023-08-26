@@ -5,10 +5,10 @@ FROM openjdk:20-jre-slim
 WORKDIR /app
 
 # Copy the application JAR file and the application.properties file (if needed) into the container
-COPY target/webservice-forecast.jar /app/webservice-forecast.jar
+COPY target/webservice-date.jar /app/webservice-date.jar
 
 # Expose the port that your Spring Boot application will run on (default is 8080)
 EXPOSE 8080
 
 # Specify the command to run your application
-CMD ["java", "-jar", "webservice-forecast.jar"]
+CMD ["java", "-jar", "webservice-date.jar"]
