@@ -1,5 +1,5 @@
 # Use an official Java runtime as a parent image
-FROM openjdk:20-jre-slim
+FROM amazoncorretto:20-alpine 
 
 # Set the working directory in the container
 WORKDIR /app
