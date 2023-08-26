@@ -1,2 +1,5 @@
 ###
 POST http://localhost:8080/forecast?datePicker=2023-07-26
+
+###
+GET http://localhost:8080/healthz
