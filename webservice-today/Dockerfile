@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.11-alpine
 ENV PYTHONUNBUFFERED 1
 
 # Set the working directory for the application
