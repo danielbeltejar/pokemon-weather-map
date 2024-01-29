@@ -20,6 +20,7 @@ class PointOfInterest:
         self.x = x
         self.y = y
 
+
 poi_list: List[PointOfInterest] = []
 
 
@@ -37,7 +38,7 @@ class ImageFiller:
         self.request_data = request_data
 
     def associate_pokemon(self, average_temperature, weather_condition) -> list[str]:
-        weather_condition: str = weather_condition.lower()
+        weather_condition: str = weather_condition.lower().strip()
 
         if weather_condition.__contains__("rain") or weather_condition.__contains__("drizzle"):
             weather_condition = "rain"
@@ -169,7 +170,7 @@ class ImageFiller:
 
         for poi in poi_list:
             ImageDraw.Draw(self.filled_image).text((poi.x + 20, poi.y - 40), str(int(poi.average_temperature)) + "c",
-                                                   font=ImageFont.truetype(font_path, 24), fill=(140,140,140))
+                                                   font=ImageFont.truetype(font_path, 24), fill=(140, 140, 140))
 
         for weather_condition in self.weather_conditions:
             if _vertical_count >= 3:
