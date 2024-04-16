@@ -90,7 +90,7 @@ class ImageFiller:
         from main import provincias
 
         for provincia, coords in provincias.items():
-            base_url = f"https://wttr.in/{provincia}?format=j1"
+            base_url = f"https://v1.wttr.in/{provincia.rstrip()}?format=j1"
             x, y = map(int, coords.split(","))
             seed_point = (x, y)
 
