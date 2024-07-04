@@ -3,7 +3,7 @@ replicaCount: 2
 env:
   TZ: "UTC"
 
-containerPort: 80
+containerPort: 8080
 registry: registry.server.local:5000
 
 namespace: pro-pokemon-weather-map-front
