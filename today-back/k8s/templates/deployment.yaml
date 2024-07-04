@@ -72,4 +72,12 @@ spec:
               port: {{ .Values.containerPort }}
             periodSeconds: 5
             initialDelaySeconds: 10
+          volumeMounts:
+          - name: images-volume
+            mountPath: /app/spain
       restartPolicy: Always
+      volumes:
+        - name: images-volume
+          hostPath:
+            path: /nfs/pro-pokemon-weather-map/app/spain
+            type: Directory
