@@ -11,7 +11,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: danielbeltejar.es
+    - host: weather.danielbeltejar.es
       http:
         paths:
           - path: /api(/|$)(.*)
@@ -23,5 +23,5 @@ spec:
                   number: {{ .Values.containerPort }}
   tls:
     - hosts:
-        - danielbeltejar.es
+        - weather.danielbeltejar.es
       secretName: letsencrypt
