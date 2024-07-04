@@ -1,14 +1,25 @@
-# Use an official Java runtime as a parent image
-FROM amazoncorretto:20-alpine 
+FROM cgr.dev/chainguard/wolfi-base as build
 
-# Set the working directory in the container
+RUN apk update && apk add openjdk-20 maven~3.9 openjdk-20-default-jvm
+
 WORKDIR /app
+ENV JAVA_HOME=/usr/lib/jvm/java-20-openjdk
 
-# Copy the application JAR file and the application.properties file (if needed) into the container
-COPY target/webservice-date.jar /app/webservice-date.jar
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+COPY src ./src
 
-# Expose the port that your Spring Boot application will run on (default is 8080)
-EXPOSE 8080
+# Ensure mvnw has execute permissions
+RUN chmod +x mvnw
 
-# Specify the command to run your application
-CMD ["java", "-jar", "webservice-date.jar"]
+USER root
+
+RUN ./mvnw package
+
+# Some Java apps may require extra locale files
+# RUN apk add glibc-locale-en
+
+USER nonroot
+
+
+ENTRYPOINT ["java", "-jar", "/app/target/webservice-date.jar"]
