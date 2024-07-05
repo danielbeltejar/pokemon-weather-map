@@ -1,5 +1,5 @@
 apiVersion: v2
-name: today-back
+name: forecast-back
 description: A Helm chart for Kubernetes
 
 type: application
