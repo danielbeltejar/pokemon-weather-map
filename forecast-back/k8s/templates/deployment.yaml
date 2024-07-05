@@ -74,7 +74,7 @@ spec:
             initialDelaySeconds: 10
           volumeMounts:
           - name: images-volume
-            mountPath: /app/src/images
+            mountPath: /app/images
       restartPolicy: Always
       volumes:
         - name: images-volume
