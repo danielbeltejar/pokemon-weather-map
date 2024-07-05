@@ -1,6 +1,7 @@
+import json
+import os
 import uuid
 from datetime import datetime, timedelta
-import os
 from time import sleep
 
 from dotenv import load_dotenv
@@ -9,6 +10,7 @@ from ImageFiller import ImageFiller
 
 load_dotenv()
 testing = bool(os.getenv("DEBUG")) if os.getenv("DEBUG") else False
+countries_list = ["spain", "unitedstates"]
 
 pokemons = {
     "hot": "Charmander",
@@ -74,16 +76,16 @@ pokemons = {
 
 temperature_ranges = [
     {"range": (-100.0, 0.0), "color": (135, 206, 250, 255)},
-        {"range": (-10.0, -9.0), "color": (135, 206, 250, 255)},
-        {"range": (-9.0, -8.0), "color": (137, 205, 247, 255)},
-        {"range": (-8.0, -7.0), "color": (140, 204, 245, 255)},
-        {"range": (-7.0, -6.0), "color": (143, 204, 242, 255)},
-        {"range": (-6.0, -5.0), "color": (146, 203, 240, 255)},
-        {"range": (-5.0, -4.0), "color": (149, 203, 237, 255)},
-        {"range": (-4.0, -3.0), "color": (151, 202, 235, 255)},
-        {"range": (-3.0, -2.0), "color": (154, 201, 232, 255)},
-        {"range": (-2.0, -1.0), "color": (157, 201, 230, 255)},
-        {"range": (-1.0, 0.0), "color": (160, 200, 227, 255)},
+    {"range": (-10.0, -9.0), "color": (135, 206, 250, 255)},
+    {"range": (-9.0, -8.0), "color": (137, 205, 247, 255)},
+    {"range": (-8.0, -7.0), "color": (140, 204, 245, 255)},
+    {"range": (-7.0, -6.0), "color": (143, 204, 242, 255)},
+    {"range": (-6.0, -5.0), "color": (146, 203, 240, 255)},
+    {"range": (-5.0, -4.0), "color": (149, 203, 237, 255)},
+    {"range": (-4.0, -3.0), "color": (151, 202, 235, 255)},
+    {"range": (-3.0, -2.0), "color": (154, 201, 232, 255)},
+    {"range": (-2.0, -1.0), "color": (157, 201, 230, 255)},
+    {"range": (-1.0, 0.0), "color": (160, 200, 227, 255)},
     {"range": (0.0, 1.0), "color": (163, 200, 225, 255)},
     {"range": (1.0, 2.0), "color": (167, 206, 227, 255)},
     {"range": (2.0, 3.0), "color": (171, 212, 229, 255)},
@@ -137,95 +139,34 @@ temperature_ranges = [
     {"range": (50.0, 100.0), "color": (128, 0, 0, 255)}  # Maroon
 ]
 
-provincias = {
-    "Asturias": "491,324",
-    "Arrecife": "1514,1158",
-    "Ceuta": "523,1314",
-    "Melilla": "806,1351",
-    "Ibiza": "1256,864",
-    "Formentera": "1254,924",
-    "Mahon, Spain": "1488,735",
-    "Gran Canaria": "1449,1281",
-    "Tenerife": "1054,1329",
-    "San Sebastián de La Gomera": "1152,1270",
-    "Santa Cruz de La Palma": "1079,1179",
-    "Álava": "826,388",
-    "Albacete": "888,934",
-    "Alicante": "1025,970",
-    "Almería": "859,1142",
-    "Ávila": "593,687",
-    "Badajoz": "452,943",
-    "Barcelona": "1280,541",
-    "Burgos": "726,464",
-    "Cáceres": "456,794",
-    "Cádiz": "477,1227",
-    "Cantabria": "673,346",
-    "Castellón": "1072,725",
-    "Ciudad Real": "703,904",
-    "Córdoba": "598,1028",
-    "Cuenca": "858,775",
-    "Gerona": "1352,477",
-    "Granada": "736,1140",
-    "Guadalajara": "821,663",
-    "Guipúzcoa": "858,347",
-    "Huelva": "372,1072",
-    "Huesca": "1065,462",
-    "Illes Balears": "1395,798",
-    "Jaén": "735,1025",
-    "La Coruña": "252,330",
-    "La Rioja": "834,462",
-    "Las Palmas": "1336,1300",
-    "León": "506,418",
-    "Lérida": "1177,499",
-    "Lugo": "350,365",
-    "Madrid": "716,695",
-    "Málaga": "605,1180",
-    "Murcia": "946,1030",
-    "Navarra": "913,406",
-    "Orense": "333,470",
-    "Palencia": "630,444",
-    "Pontevedra": "245,424",
-    "Salamanca": "472,648",
-    "Segovia": "684,609",
-    "Sevilla": "494,1097",
-    "Soria": "826,546",
-    "Tarragona": "1164,608",
-    "Santa Cruz de Tenerife": "1225,1247",
-    "Teruel": "993,691",
-    "Toledo": "657,787",
-    "Valencia": "1023,853",
-    "Valladolid": "603,560",
-    "Bizkaia": "808,333",
-    "Zamora": "489,536",
-    "Zaragoza": "966,554"
-}
-
 base_url = "https://api.openweathermap.org/data/2.5/weather"
 
-image_filler = ImageFiller("images/spain.png", pokemons, temperature_ranges, testing)
-success = False
+for country in countries_list:
+    provincias = json.load(open(f"config/{country}.json"))
 
-while not success:
-    try:
-        image_filler.fill_image()
-        success = True
-    except Exception as e:
-        print(f"Error: {e}")
-        sleep(300)
+    image_filler = ImageFiller(f"images/{country}.png", pokemons, temperature_ranges, testing, country)
+    success = False
 
+    while not success:
+        try:
+            image_filler.fill_image()
+            success = True
+        except Exception as e:
+            print(f"Error: {e}")
+            sleep(300)
 
-output_dir = "images/output/spain"
-os.makedirs(output_dir, exist_ok=True)
+    output_dir = f"images/output/{country}"
+    os.makedirs(output_dir, exist_ok=True)
 
-tomorrow_date = datetime.now() + timedelta(days=1)
+    tomorrow_date = datetime.now() + timedelta(days=1)
 
-year_month_day = tomorrow_date.strftime("%Y/%m/%d")
+    year_month_day = tomorrow_date.strftime("%Y/%m/%d")
 
-subdirectory = os.path.join(output_dir, year_month_day)
-os.makedirs(subdirectory, exist_ok=True)
+    subdirectory = os.path.join(output_dir, year_month_day)
+    os.makedirs(subdirectory, exist_ok=True)
 
-filename = f"{uuid.uuid4()}.webp"
+    filename = f"{uuid.uuid4()}.webp"
 
-image_filler.save_image(os.path.join(subdirectory, filename))
+    image_filler.save_image(os.path.join(subdirectory, filename))
 
 exit()

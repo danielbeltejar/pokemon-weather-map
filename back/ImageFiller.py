@@ -26,7 +26,7 @@ poi_list: List[PointOfInterest] = []
 
 class ImageFiller:
 
-    def __init__(self, image_path, pokemons, temperature_ranges, request_data: bool = None):
+    def __init__(self, image_path, pokemons, temperature_ranges, request_data: bool = None, country: str = None):
         self.image = Image.open(image_path)
         self.image = self.image.convert("RGBA")  # Convert to RGBA mode for transparency support
         self.width, self.height = self.image.size
@@ -36,6 +36,7 @@ class ImageFiller:
         self.temperature_ranges = temperature_ranges
         self.weather_conditions = []
         self.request_data = request_data
+        self.country = country
 
     def associate_pokemon(self, average_temperature, weather_condition) -> list[str]:
         weather_condition: str = weather_condition.lower().strip()
@@ -147,7 +148,7 @@ class ImageFiller:
                     pokemon_image = PokemonImage(self.filled_image, (x, y), (110, 110), pokemon_name, artwork=True)
                     pokemon_image.paste_pokemon_on_filled_image()
 
-                    translated_weather = WeatherTranslations().translate(weather_condition)
+                    translated_weather = WeatherTranslations(country=self.country).translate(weather_condition)
 
                     if not self.weather_conditions.__contains__(translated_weather):
                         self.weather_conditions.append(translated_weather)
@@ -163,14 +164,31 @@ class ImageFiller:
         font_size = 48
         font = ImageFont.truetype(font_path, font_size)
         text_color = (0, 0, 0)
-
+        outline_color = (250, 250, 250)
         _vertical_count = 0
         x = 110
         y = 1398
 
+        positions = [(x, y) for x in range(-1, 2) for y in range(-1, 2) if x != 0 or y != 0]
+
         for poi in poi_list:
-            ImageDraw.Draw(self.filled_image).text((poi.x + 20, poi.y - 40), str(int(poi.average_temperature)) + "c",
-                                                   font=ImageFont.truetype(font_path, 24), fill=(140, 140, 140))
+            text = str(int(poi.average_temperature)) + "º"
+            x_temp, y_temp = poi.x + 20, poi.y - 40
+
+            # Draw the outline text
+            for pos in positions:
+                ImageDraw.Draw(self.filled_image).text((x_temp + pos[0], y_temp + pos[1]), text, font=font,
+                                                       fill=text_color)
+
+            # Draw the main text
+            ImageDraw.Draw(self.filled_image).text((x_temp, y_temp), text, font=font, fill=outline_color)
+
+        poi_list.clear()
+
+        # Draw weather condition text without outline
+        _vertical_count = 0
+        x = 110
+        y = 1398
 
         for weather_condition in self.weather_conditions:
             if _vertical_count >= 3:
@@ -180,7 +198,7 @@ class ImageFiller:
 
             ImageDraw.Draw(self.filled_image).text((x, y), weather_condition, font=font, fill=text_color)
 
-            weather_translations = WeatherTranslations()
+            weather_translations = WeatherTranslations(country=self.country)
 
             pokemon_name = self.pokemons.get(weather_translations.get_first_key_by_value(weather_condition))
             pokemon_custom_offset = PokemonImage(self.filled_image, (x, y), (96, 72), pokemon_name, artwork=False,
