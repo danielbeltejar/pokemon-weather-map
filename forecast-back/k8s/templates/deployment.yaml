@@ -74,10 +74,10 @@ spec:
             initialDelaySeconds: 10
           volumeMounts:
           - name: images-volume
-            mountPath: /app/spain
+            mountPath: /app/src/images
       restartPolicy: Always
       volumes:
         - name: images-volume
           hostPath:
-            path: /nfs/pro-pokemon-weather-map/app/spain
+            path: /nfs/pro-pokemon-weather-map/app/
             type: Directory
