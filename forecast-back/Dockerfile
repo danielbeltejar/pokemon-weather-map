@@ -21,8 +21,8 @@ RUN apk update \
 
 # Create the app directory
 RUN mkdir /app
-COPY ./src /app
-WORKDIR /app
+COPY . /app
+WORKDIR /app/src
 
 # Change ownership of directories and files
 RUN chown -R appuser:appuser /app
