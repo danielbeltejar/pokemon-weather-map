@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.routers.HealthRouter import health_router
-from src.routers.Forecast import forecast_router
+from routers.HealthRouter import health_router
+from routers.Forecast import forecast_router
 
 app = FastAPI()
 app.include_router(health_router)
