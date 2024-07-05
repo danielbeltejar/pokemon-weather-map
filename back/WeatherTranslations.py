@@ -13,3 +13,6 @@ class WeatherTranslations:
             if val == value:
                 return key
         return None
+
+    def get_value_by_key(self, key):
+        return self.translations.get(key)

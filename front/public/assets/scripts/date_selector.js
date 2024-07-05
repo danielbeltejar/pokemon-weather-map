@@ -1,6 +1,6 @@
 const submitBtn = document.getElementById("submitBtn");
 const datePicker = document.getElementById("datePicker");
-const resultDiv = document.getElementById("resultDiv");
+const resultDiv = document.getElementById("submitBtn");
 const imageContainer = document.getElementById("imageContainer");
 
 // Set the date picker to today's date
@@ -14,7 +14,7 @@ submitBtn.addEventListener("click", () => {
 
 function fetchAndDisplayForecast(date) {
     if (date) {
-        const url = "https://weather.danielbeltejar.es/api/forecast?date=" + date.replaceAll("-", "/") + "&country=spain";
+        const url = "https://weather.danielbeltejar.es/api/forecast?date=" + date.replaceAll("-", "/") + "&country=" + country;
 
         fetch(url, {
             method: "GET",

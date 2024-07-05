@@ -9,6 +9,16 @@
     <meta name="description"
         content="Get real-time Pokémon weather forecasts for various regions. Choose a date and the country to see the latest weather conditions.">
     <link href="assets/css/styles.css" rel="stylesheet">
+    <style>
+        /* Add your Tailwind CSS link here */
+
+        #movingSpan {
+            top: 0;
+            left: 0;
+            -z-index: 0;  /* Ensure it's positioned correctly in stacking context */
+            background-color: rgba(59, 130, 246, 0.5); /* For better visibility during transition */
+        }
+    </style>
 
     <script type="text/javascript">
         (function (c, l, a, r, i, t, y) {
@@ -21,16 +31,32 @@
 
 <body id="background" class="lg:bg-gray-200 bg-white">
     <div
-        class="flex flex-col container mx-auto h-full w-full mt-8 p-6 lg:h-[42rem] max-w-sm bg-white lg:rounded-md lg:shadow-sm">
+        class="flex flex-col container mx-auto h-full w-full mt-8 p-6 lg:h-[44rem] max-w-sm bg-white lg:rounded-md lg:shadow-sm">
         <img src="assets/images/pokeweather.png" alt="PokeWeather Logo" class="w-auto h-auto mb-4 drop-shadow-md">
         <label for="datePicker" class="block mb-2 border w-fit px-4 rounded">Select a Date</label>
-        <div class="flex flex-row gap-3 lg:flex-col mb-5">
+        <div class="flex flex-row gap-3 lg:flex-col mb-4">
             <input type="date" id="datePicker"
                 class="w-full py-2 px-4 border rounded hover:border-blue-400 transition-colors">
-            <button style="background-image: url('assets/images/water_tile.png');" id="submitBtn"
-                class="bg-repeat flex-shrink-0 h-11 py-2 px-4 bg-blue-500  font-semibold text-white rounded hover:bg-blue-600">Get
-                Forecast</button>
         </div>
+        <div class="flex flex-row justify-evenly items-center gap-3 bg-gray-200 rounded-xl min-h-[80px] relative z-0">
+            <div class="map rounded-md hover:border-blue-600 active:border-blue-600 cursor-pointer"id="spain">
+                <img src="assets/images/country_es.png" alt="Spain" class="w-16 h-auto rounded-md" >
+            </div>
+            <div class="map rounded-md hover:border-blue-600 active:border-blue-600 cursor-pointer" id="unitedstates">
+                <img src="assets/images/country_us.png" alt="United States" class="w-16 h-auto rounded-md" >
+            </div>
+            <div class="map rounded-md hover:border-blue-600 active:border-blue-600 cursor-pointer hidden">
+                <img src="assets/images/country_de.png" alt="Germany" class="w-16 h-auto rounded-md">
+            </div>
+            <div class="map rounded-md hover:border-blue-600 active:border-blue-600 cursor-pointer hidden">
+                <img src="assets/images/country_jp.png" alt="Japan" class="w-16 h-auto rounded-md">
+            </div>
+            <span id="movingSpan" class="-z-10 bg-blue-600 w-[80px] h-[80px] absolute transition-all duration-200 rounded-xl"></span>
+        </div>
+        <button style="background-image: url('assets/images/water_tile.png');" id="submitBtn"
+        class="bg-repeat flex-shrink-0 h-11 py-2 px-4 mt-4 bg-blue-500  font-semibold text-white rounded hover:bg-blue-600">Get
+        Forecast</button>
+
         <div onclick="zoomInImage(this)" class="image-container mt-auto mb-0 cursor-zoom-in w-[336px] h-[336px] transition-transform duration-300 transform scale-100 hover:scale-95">
             <img id="forecast-image" class=" bg-cover bg-repeat bg-gray-100"
                 alt="Weather Forecast Image"

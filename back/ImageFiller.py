@@ -190,6 +190,8 @@ class ImageFiller:
         x = 110
         y = 1398
 
+        weather_translations = WeatherTranslations(country=self.country)
+
         for weather_condition in self.weather_conditions:
             if _vertical_count >= 3:
                 x += 515
@@ -197,8 +199,6 @@ class ImageFiller:
                 _vertical_count = 0
 
             ImageDraw.Draw(self.filled_image).text((x, y), weather_condition, font=font, fill=text_color)
-
-            weather_translations = WeatherTranslations(country=self.country)
 
             pokemon_name = self.pokemons.get(weather_translations.get_first_key_by_value(weather_condition))
             pokemon_custom_offset = PokemonImage(self.filled_image, (x, y), (96, 72), pokemon_name, artwork=False,
@@ -215,13 +215,16 @@ class ImageFiller:
 
         font = ImageFont.truetype(font_path, 64)
         W, H = (1600, 275)
-        locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
+        if self.country == "spain":
+            locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
+        elif self.country == "unitedstates":
+            locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
         date = datetime.now() + timedelta(days=1)
         month = date.strftime("%B")
         day = date.strftime("%d")
 
-        title_text = f"Pronóstico {month} {day}"
+        title_text = f"{weather_translations.get_value_by_key('forecast')} {month} {str(int(day))}"
         text_color = (0, 0, 128)
 
         draw = ImageDraw.Draw(self.filled_image)
