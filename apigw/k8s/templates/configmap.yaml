@@ -6,12 +6,7 @@ metadata:
 data:
   config.yaml: |
     routes:
-      - pattern: "/api/forecast/today"
+      - pattern: "/api/forecast"
         method:
           - "GET"
-        backend_dns: "http://today-back-service.pro-pokemon-weather-map-back.svc.cluster.local:8000"
-      - pattern: "/api/v1/date/forecast"
-        method:
-          - "GET"
-        backend_dns: "http://date-back-service.pro-pokemon-weather-map-back.svc.cluster.local:8080"
-
+        backend_dns: "http://forecast-back-service.pro-pokemon-weather-map-back.svc.cluster.local:8000"

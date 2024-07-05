@@ -14,11 +14,8 @@ logger = logging.getLogger()
 async def get_forecast(date: str = Query(default=datetime.now().strftime("%Y/%m/%d")),
                        country: str = Query(default="spain")):
     try:
-        # Parse the date string
-        date_obj = datetime.strptime(date, "%Y/%m/%d")
-
         # Format the directory path
-        dir_path = os.path.join(country, str(date_obj.year), str(date_obj.month).zfill(2), str(date_obj.day).zfill(2))
+        dir_path = os.path.join("images", country, str(date.split("/")[0]), str(date.split("/")[1]), str(date.split("/")[2]))
 
         # Check if directory exists
         if not os.path.isdir(dir_path):
