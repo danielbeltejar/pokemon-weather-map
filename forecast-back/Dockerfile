@@ -22,7 +22,7 @@ RUN apk update \
 # Create the app directory
 RUN mkdir /app
 COPY . /app
-WORKDIR /app/src
+WORKDIR /app
 
 # Change ownership of directories and files
 RUN chown -R appuser:appuser /app
@@ -38,4 +38,4 @@ EXPOSE 8000
 USER appuser
 
 # Run the application with uvicorn
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
