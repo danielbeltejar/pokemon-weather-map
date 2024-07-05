@@ -34,9 +34,9 @@ async def get_forecast(date: str = Query(default=datetime.now().strftime("%Y/%m/
 
         # Return the image as a streaming response
         return StreamingResponse(open(image_path, 'rb'), media_type='image/webp')
-
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid date format. Please use YYYY/MM/DD.")
     except Exception as e:
         logger.error(str(e))
         raise HTTPException(status_code=500, detail="An error occurred while processing the request")
+
