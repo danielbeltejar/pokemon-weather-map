@@ -10,7 +10,7 @@ from ImageFiller import ImageFiller
 
 load_dotenv()
 testing = bool(os.getenv("DEBUG")) if os.getenv("DEBUG") else False
-countries_list = ["spain", "unitedstates"]
+countries_list = ["germany", "spain", "unitedstates"]
 
 pokemons = {
     "hot": "Charmander",
