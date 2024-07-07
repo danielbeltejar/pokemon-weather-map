@@ -3,7 +3,9 @@ FROM python:3.11-slim
 # Set the locale to support Spanish language and UTF-8 encoding
 RUN apt-get update && apt-get install -y locales \
     && echo "es_ES.UTF-8 UTF-8" > /etc/locale.gen \
+    && echo "de_DE.UTF-8 UTF-8" >> /etc/locale.gen \
     && locale-gen es_ES.UTF-8 \
+    && locale-gen de_DE.UTF-8 \
     && dpkg-reconfigure --frontend=noninteractive locales \
     && /usr/sbin/update-locale LANG=es_ES.UTF-8
 

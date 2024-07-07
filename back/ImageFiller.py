@@ -219,6 +219,8 @@ class ImageFiller:
             locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
         elif self.country == "unitedstates":
             locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+        elif self.country == "germany":
+            locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
 
         date = datetime.now() + timedelta(days=1)
         month = date.strftime("%B")
@@ -231,7 +233,8 @@ class ImageFiller:
         _, _, w, h = draw.textbbox((0, 0), title_text, font=font)
         draw.text(((W - w) / 2, (H - h) / 2), title_text, font=font, fill=text_color)
 
-    def save_image(self, output_path):
+    def save_image(self, output_path, debug: bool):
         self.filled_image = self.filled_image.resize((1080, 1080), resample=Image.BILINEAR)
         self.filled_image.convert("RGB").save(output_path, "WEBP", quality=80)
-        self.filled_image.show()
+        if debug:
+            self.filled_image.show()
