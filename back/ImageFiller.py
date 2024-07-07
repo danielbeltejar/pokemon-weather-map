@@ -215,12 +215,15 @@ class ImageFiller:
 
         font = ImageFont.truetype(font_path, 64)
         W, H = (1600, 275)
-        if self.country == "spain":
-            locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
-        elif self.country == "unitedstates":
-            locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
-        elif self.country == "germany":
-            locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
+        try:
+            if self.country == "spain":
+                locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
+            elif self.country == "unitedstates":
+                locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+            elif self.country == "germany":
+                locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
+        except locale.Error as e:
+            print(f"Error setting locale: {e}")
 
         date = datetime.now() + timedelta(days=1)
         month = date.strftime("%B")
