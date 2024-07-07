@@ -167,6 +167,6 @@ for country in countries_list:
 
     filename = f"{uuid.uuid4()}.webp"
 
-    image_filler.save_image(os.path.join(subdirectory, filename))
+    image_filler.save_image(os.path.join(subdirectory, filename), testing)
 
 exit()
