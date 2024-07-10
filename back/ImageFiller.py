@@ -110,7 +110,7 @@ class ImageFiller:
 
             if self.request_data or response.status_code == 200:
                 next_day_weather = data['weather'][1]  # Index 1 corresponds to the next day's weather
-                average_temperature = float(next_day_weather['avgtempC'])
+                average_temperature = float(next_day_weather['avgtempC']) + 3
 
                 weather_desc_count = {}
 
