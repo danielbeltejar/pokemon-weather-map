@@ -1,7 +1,7 @@
 from PIL import Image
 
 
-class PokemonImage:
+class ImagePokemon:
     def __init__(self, image, coords, size, pokemon, artwork=True, x_offset=0, y_offset=0):
         self.filled_image = image
         self.pokemon_image = self._load_pokemon_image(pokemon, artwork, size)

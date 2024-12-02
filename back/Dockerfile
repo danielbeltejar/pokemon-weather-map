@@ -1,6 +1,5 @@
-FROM python:3.11-slim
+FROM python:3.12-slim
 
-# Set the locale to support Spanish language and UTF-8 encoding
 RUN apt-get update && apt-get install -y locales \
     && echo "es_ES.UTF-8 UTF-8" > /etc/locale.gen \
     && echo "de_DE.UTF-8 UTF-8" >> /etc/locale.gen \
@@ -14,14 +13,12 @@ RUN apt-get update && apt-get install -y locales \
 ENV LANG es_ES.UTF-8
 ENV LC_ALL es_ES.UTF-8
 
-# Set the working directory for the application
 WORKDIR /app
 
-# Copy the application files
 COPY . .
 
-# Install project dependencies
+ENV PYTHONPATH="/app"
+
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Run the application
-CMD ["python", "main.py"]
+CMD ["python", "src/main.py"]

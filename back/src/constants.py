@@ -1,18 +1,8 @@
-import json
 import os
-import uuid
-from datetime import datetime, timedelta
-from time import sleep
 
-from dotenv import load_dotenv
+COUNTRIES_LIST = ["germany", "spain", "unitedstates"]
 
-from ImageFiller import ImageFiller
-
-load_dotenv()
-testing = bool(os.getenv("DEBUG")) if os.getenv("DEBUG") else False
-countries_list = ["germany", "spain", "unitedstates"]
-
-pokemons = {
+POKEMONS = {
     "hot": "Charmander",
     "hotter": "Charmeleon",
     "hottest": "Charizard",
@@ -74,7 +64,7 @@ pokemons = {
     "moderate or heavy rain in area with thunder": "Avalugg"
 }
 
-temperature_ranges = [
+TEMPERATURE_RANGES = [
     {"range": (-100.0, 0.0), "color": (135, 206, 250, 255)},
     {"range": (-10.0, -9.0), "color": (135, 206, 250, 255)},
     {"range": (-9.0, -8.0), "color": (137, 205, 247, 255)},
@@ -136,37 +126,7 @@ temperature_ranges = [
     {"range": (47.0, 48.0), "color": (134, 0, 0, 255)},
     {"range": (48.0, 49.0), "color": (130, 0, 0, 255)},
     {"range": (49.0, 50.0), "color": (128, 0, 0, 255)},
-    {"range": (50.0, 100.0), "color": (128, 0, 0, 255)}  # Maroon
+    {"range": (50.0, 100.0), "color": (128, 0, 0, 255)}
 ]
 
-base_url = "https://api.openweathermap.org/data/2.5/weather"
-
-for country in countries_list:
-    provincias = json.load(open(f"config/{country}.json"))
-
-    image_filler = ImageFiller(f"images/{country}.png", pokemons, temperature_ranges, testing, country)
-    success = False
-
-    while not success:
-        try:
-            image_filler.fill_image()
-            success = True
-        except Exception as e:
-            print(f"Error: {e}")
-            sleep(300)
-
-    output_dir = f"images/output/{country}"
-    os.makedirs(output_dir, exist_ok=True)
-
-    tomorrow_date = datetime.now() + timedelta(days=1)
-
-    year_month_day = tomorrow_date.strftime("%Y/%m/%d")
-
-    subdirectory = os.path.join(output_dir, year_month_day)
-    os.makedirs(subdirectory, exist_ok=True)
-
-    filename = f"{uuid.uuid4()}.webp"
-
-    image_filler.save_image(os.path.join(subdirectory, filename), testing)
-
-exit()
+TESTING = bool(os.getenv("DEBUG")) if os.getenv("DEBUG") else False
