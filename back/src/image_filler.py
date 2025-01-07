@@ -13,6 +13,22 @@ from src.weather_translations import WeatherTranslations
 
 
 class ImageFiller:
+    """
+    ImageFiller Class
+
+    This class generates an image with weather data and Pokémon associations for specified provinces.
+    It fetches weather data, analyzes conditions, and overlays visual elements such as Pokémon, temperature labels, and weather conditions.
+
+    Attributes:
+        image_path (str): Path to the base image.
+        pokemons (dict): Mapping of weather conditions to Pokémon names.
+        temperature_ranges (list): List of temperature ranges and their corresponding fill colors.
+        logger (Logger): Logging object for application logs.
+        testing (bool): Indicates if the script is running in testing mode.
+        country (str): Country code for localization.
+        provinces (dict): Mapping of province names to their coordinates on the image.
+    """
+
     def __init__(self, image_path, pokemons, temperature_ranges, logger, testing, country, provinces):
         self.logger = logger
         self.image = Image.open(image_path).convert("RGBA")
@@ -26,9 +42,18 @@ class ImageFiller:
         self.poi_list = []
 
     def fill_image(self):
+        """
+           Fills the image with weather data and Pokémon information for each province.
 
+           Retrieves weather data from a weather API, determines the average temperature and weather conditions,
+           and associates these with a Pokémon. The image is filled with corresponding colors, Pokémon images,
+           and weather conditions. Also, adds temperature labels, weather conditions, and a legend.
+
+           Raises:
+               HTTPError: If the weather API request fails.
+           """
         for provincia, coords in self.provinces.items():
-            sleep(0.1)
+            sleep(0.2)
 
             base_url = f"https://v1.wttr.in/{provincia.rstrip()}?format=j1"
             x, y = map(int, coords.split(","))
@@ -59,14 +84,32 @@ class ImageFiller:
         self._draw_weather_conditions()
         self._add_legend()
         self._draw_title()
-        self.poi_list.clear()
 
     def _get_weather_data(self, base_url):
+        """
+        Fetches weather data from the specified API URL.
+
+        Args:
+            base_url (str): The URL of the weather API.
+
+        Returns:
+            dict: The weather data as a JSON object if the request is successful.
+            None: If the request fails or returns a non-200 status code.
+        """
         response = requests.get(base_url)
         if response.status_code == 200:
             return response.json()
 
     def _get_most_common_weather_condition(self, hourly_data):
+        """
+        Determines the most common weather condition from hourly weather data.
+
+        Args:
+            hourly_data (list): A list of hourly weather data entries.
+
+        Returns:
+            str: The most frequently occurring weather condition.
+        """
         weather_desc_count = {}
         for entry in hourly_data:
             weather_desc_value = entry['weatherDesc'][0]['value']
@@ -74,12 +117,32 @@ class ImageFiller:
         return max(weather_desc_count, key=weather_desc_count.get)
 
     def _determine_fill_color(self, temperature):
+        """
+        Determines the fill color based on the temperature range.
+
+        Args:
+            temperature (float): The average temperature in Celsius.
+
+        Returns:
+            tuple: The RGB color tuple corresponding to the temperature range.
+            None: If no matching range is found.
+        """
         for temp_range in self.temperature_ranges:
             if temp_range["range"][0] <= temperature < temp_range["range"][1]:
                 return temp_range["color"]
         return None
 
     def _log_poi_data(self, provincia, condition, temperature, pokemon, color):
+        """
+        Logs the details of a point of interest (POI).
+
+        Args:
+            provincia (str): The name of the province.
+            condition (str): The weather condition.
+            temperature (float): The average temperature in Celsius.
+            pokemon (str): The name of the associated Pokémon.
+            color (tuple): The RGB color for the province.
+        """
         self.logger.info(
             "Point of Interest data log",
             extra={
@@ -92,15 +155,36 @@ class ImageFiller:
         )
 
     def _paste_pokemon_image(self, x, y, pokemon_name):
+        """
+        Pastes a Pokémon image onto the main image at the specified coordinates.
+
+        Args:
+            x (int): The x-coordinate for pasting the image.
+            y (int): The y-coordinate for pasting the image.
+            pokemon_name (str): The name of the Pokémon.
+        """
+
         pokemon_image = ImagePokemon(self.image, (x, y), (110, 110), pokemon_name, artwork=True)
         pokemon_image.paste_pokemon_on_filled_image()
 
     def _add_weather_condition(self, condition):
+        """
+        Translates and adds a weather condition to the list if it is not already present.
+
+        Args:
+            condition (str): The weather condition in English.
+        """
         translated_weather = WeatherTranslations(country=self.country).translate(condition)
         if translated_weather not in self.weather_conditions:
             self.weather_conditions.append(translated_weather)
 
     def _add_temperature_labels(self, poi_list):
+        """
+        Adds temperature labels to the image for each point of interest.
+
+        Args:
+            poi_list (list): A list of PointOfInterest objects.
+        """
         font_path = "fonts/PokemonGb-RAeo.ttf"
         font = ImageFont.truetype(font_path, 48)
         text_color, outline_color = (0, 0, 0), (250, 250, 250)
@@ -115,6 +199,9 @@ class ImageFiller:
             ImageDraw.Draw(self.image).text((x_temp, y_temp), text, font=font, fill=outline_color)
 
     def _draw_weather_conditions(self):
+        """
+        Draws weather conditions and their associated Pokémon on the image.
+        """
         font_path = "fonts/PokemonGb-RAeo.ttf"
         font = ImageFont.truetype(font_path, 48)
         text_color = (0, 0, 0)
@@ -137,11 +224,20 @@ class ImageFiller:
             _vertical_count += 1
 
     def _add_legend(self):
+        """
+        Adds a legend to the image if the number of weather conditions is below a threshold.
+        """
         if len(self.weather_conditions) < 9:
             legend_image = Image.open("images/misc/legend_v2.png").convert("RGBA")
             self.image.paste(legend_image, (1260, 1512), legend_image)
 
     def _draw_title(self):
+        """
+        Draws the title on the image, including the forecast date and a localized month name.
+
+        Raises:
+            locale.Error: If the locale cannot be set.
+        """
         font_path = "fonts/PokemonGb-RAeo.ttf"
         font = ImageFont.truetype(font_path, 64)
         W, H = (1600, 275)
@@ -160,6 +256,16 @@ class ImageFiller:
         draw.text(((W - w) / 2, (H - h) / 2), title_text, font=font, fill=(0, 0, 128))
 
     def _associate_pokemon(self, average_temperature, weather_condition) -> list[str]:
+        """
+        Associates a Pokémon with the given average temperature and weather condition.
+
+        Args:
+            average_temperature (float): The average temperature in Celsius.
+            weather_condition (str): The weather condition.
+
+        Returns:
+            list[str]: A list containing the Pokémon name and normalized weather condition.
+        """
         weather_condition: str = weather_condition.lower().strip()
 
         if weather_condition.__contains__("rain") or weather_condition.__contains__("drizzle"):
@@ -171,19 +277,28 @@ class ImageFiller:
         elif weather_condition.__contains__("thunder"):
             weather_condition = "thunderstorm"
 
-        if average_temperature >= 34.0:
-            weather_condition = "hottest"
-        elif average_temperature >= 32.0:
-            weather_condition = "hotter"
-        elif average_temperature >= 30.0:
-            weather_condition = "hot"
-        elif average_temperature <= 5.0:
-            weather_condition = "frozen"
+        if weather_condition in ("sunny", "clear"):
+            if average_temperature >= 34.0:
+                weather_condition = "hottest"
+            elif average_temperature >= 32.0:
+                weather_condition = "hotter"
+            elif average_temperature >= 30.0:
+                weather_condition = "hot"
+            elif average_temperature <= 5.0:
+                weather_condition = "frozen"
 
         pokemon = self.pokemons.get(weather_condition)
         return [pokemon.lower(), str(weather_condition.lower())]
 
     def _bucket_fill(self, seed_point, fill_color):
+        """
+        Fills contiguous pixels with a specified color starting from a seed point.
+
+        Args:
+            seed_point (tuple): The starting point for the fill operation (x, y).
+            fill_color (tuple): The RGB color to use for filling.
+        """
+
         target_color = self.image.getpixel(seed_point)
 
         if target_color == fill_color:
@@ -209,10 +324,22 @@ class ImageFiller:
                 )
 
     def save_image(self, file_path):
+        """
+        Saves the current state of the image to a specified file path.
+
+        Args:
+            file_path (str): The path where the image should be saved.
+        """
         self.image.save(file_path, format="WEBP")
         self.logger.info(f"Image saved to {file_path}")
 
     def generate_ai_forecast(self):
+        """
+        Generates an AI-based weather forecast for the current points of interest.
+
+        Uses an external AI forecasting service to generate predictions based on
+        weather and location data. Clears the current list of points of interest after processing.
+        """
         ai_forecast = AIForecast(self.poi_list, self.logger)
-        ai_forecast.prompt(Client(host="http://ollama.server.local:11434"), self.country)
-        pass
+        ai_forecast.generate_forecast(Client(host="http://ollama.server.local:11434"), self.country)
+        self.poi_list.clear()
