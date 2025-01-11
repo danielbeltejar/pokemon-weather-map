@@ -78,6 +78,5 @@ spec:
       restartPolicy: Always
       volumes:
         - name: images-volume
-          hostPath:
-            path: /nfs/pro-pokemon-weather-map/app/
-            type: Directory
+          persistentVolumeClaim:
+            claimName: images-pvc
