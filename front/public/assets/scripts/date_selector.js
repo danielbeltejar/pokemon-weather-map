@@ -3,7 +3,6 @@ const datePicker = document.getElementById("datePicker");
 const resultDiv = document.getElementById("submitBtn");
 const imageContainer = document.getElementById("imageContainer");
 
-// Set the date picker to today's date
 const today = new Date().toISOString().split('T')[0];
 datePicker.value = today;
 
@@ -14,7 +13,7 @@ submitBtn.addEventListener("click", () => {
 
 function fetchAndDisplayForecast(date) {
     if (date) {
-        const url = "https://weather.danielbeltejar.es/api/forecast?date=" + date.replaceAll("-", "/") + "&country=" + country;
+        const url = window.location.origin + "/api/forecast?date=" + date.replaceAll("-", "/") + "&country=" + country;
 
         fetch(url, {
             method: "GET",
@@ -41,7 +40,6 @@ function fetchAndDisplayForecast(date) {
     }
 }
 
-// Fetch and display forecast when the page loads
 window.onload = () => {
     fetchAndDisplayForecast(today);
 };
