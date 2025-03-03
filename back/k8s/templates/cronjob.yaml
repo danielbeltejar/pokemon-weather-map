@@ -1,16 +1,18 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ .Chart.Name }}
+  name: {{ include "app.fullname" . }}
   namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
 spec:
-  schedule: "0 19 * * *"
+  schedule: {{ .Values.cronJob.schedule | quote }}
   jobTemplate:
     spec:
       template:
         metadata:
           labels:
-            app:  {{ .Chart.Name }}
+            {{- include "app.selectorLabels" . | nindent 12 }}
         spec:
           securityContext:
             fsGroup: 10003
@@ -25,39 +27,39 @@ spec:
                     - key: app
                       operator: In
                       values:
-                      - {{ .Chart.Name }}
+                      - {{ include "app.fullname" . }}
                   topologyKey: kubernetes.io/hostname
           containers:
-            - name: {{ .Chart.Name }}-container
+            - name: '{{ include "app.fullname" . }}-container'
               image: "{{ .Values.registry }}/{{ .Chart.Name }}:{{ .Chart.AppVersion }}"
-              imagePullPolicy: Always
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
               env:
-              {{- range $key, $val := .Values.env }}
-                - name: {{ $key }}
-                  value: {{ $val | quote }}
-              {{- end }}
+                {{- with .Values.extraEnv }}
+                  {{- toYaml . | nindent 18 }}
+                {{- end }}
+              envFrom:
+                {{- with .Values.extraEnvFrom }}
+                  {{- toYaml . | nindent 18 }}
+                {{- end }}
               securityContext:
                 capabilities:
                   drop:
                   - ALL
                 runAsNonRoot: true
                 readOnlyRootFilesystem: true
-                runAsUser: 10001
+                runAsUser: 65532
                 runAsGroup: 10002
                 allowPrivilegeEscalation: false
                 seccompProfile:
                   type: RuntimeDefault
               resources:
-                requests:
-                  memory: "32Mi"
-                limits:
-                  cpu: 500m
-                  memory: "512Mi"
+                {{- toYaml .Values.resources | nindent 16 }}
               volumeMounts:
-                - mountPath: /app/images/output
-                  name: app-volume
+              {{- with .Values.volumeMounts }}
+                {{- toYaml . | nindent 16 }}
+              {{- end }}
           volumes:
-            - name: app-volume
-              persistentVolumeClaim:
-                claimName: images-pvc
+          {{- with .Values.volumes }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           restartPolicy: OnFailure

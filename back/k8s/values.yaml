@@ -1,9 +1,23 @@
-replicaCount: 2
-
-env:
-  TZ: "UTC"
-
-containerPort: 8080
-registry: registry.server.local:5000
-
-namespace: pro-pokemon-weather-map-back
+namespace: pre-pokemon-weather-map-back
+replicaCount: 1
+registry: harbor.server.local/danielbeltejar/pokemon-weather-map
+image:
+  pullPolicy: IfNotPresent
+extraEnv:
+- name: "TZ"
+  value: "UTC"
+extraEnvFrom: []
+cronJob:
+  schedule: "0 18 * * *"
+resources:
+  requests:
+    memory: "32Mi"
+  limits:
+    memory: "512Mi"
+volumeMounts:
+- mountPath: /app/images/output
+  name: app-volume
+volumes:
+- name: app-volume
+  persistentVolumeClaim:
+    claimName: images-pvc

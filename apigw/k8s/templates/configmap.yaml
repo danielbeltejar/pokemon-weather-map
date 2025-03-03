@@ -1,12 +1,14 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ printf "%s-config" .Chart.Name | trunc 63 | trimSuffix "-" }}
+  name: {{ include "app.fullname" . }}-config
   namespace: {{ .Values.namespace }}
 data:
   config.yaml: |
     routes:
-      - pattern: "/api/forecast"
-        method:
-          - "GET"
-        backend_dns: "http://forecast-back-service.pro-pokemon-weather-map-back.svc.cluster.local:8000"
+      {{- range .Values.config.routes }}
+      - pattern: {{ .pattern | quote }}
+        method: 
+          {{- toYaml .method | nindent 10 }}
+        backend_dns: {{ .backend_dns | quote }}
+      {{- end }}

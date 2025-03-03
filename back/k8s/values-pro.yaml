@@ -1,25 +1,23 @@
-namespace: pre-pokemon-weather-map-back
-replicaCount: 1
+namespace: pro-pokemon-weather-map-back
 registry: harbor.server.local/danielbeltejar/pokemon-weather-map
 image:
   pullPolicy: IfNotPresent
-service:
-  type: ClusterIP
-  port: 80
-  targetPort: 8000
 extraEnv:
 - name: "TZ"
   value: "UTC"
 extraEnvFrom: []
+cronJob:
+  schedule: "0 19 * * *"
 resources:
   requests:
     memory: "32Mi"
   limits:
-    memory: "128Mi"
+    cpu: 500m
+    memory: "512Mi"
 volumeMounts:
-- name: images-volume
-  mountPath: /app/images
+- mountPath: /app/images/output
+  name: app-volume
 volumes:
-- name: images-volume
+- name: app-volume
   persistentVolumeClaim:
     claimName: images-pvc

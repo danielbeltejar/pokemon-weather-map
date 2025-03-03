@@ -1,4 +1,4 @@
-namespace: pre-pokemon-weather-map-back
+namespace: pro-pokemon-weather-map-back
 replicaCount: 1
 registry: harbor.server.local/danielbeltejar/pokemon-weather-map
 image:
@@ -15,11 +15,12 @@ resources:
   requests:
     memory: "32Mi"
   limits:
+    cpu: 500m
     memory: "128Mi"
 volumeMounts:
-- name: images-volume
-  mountPath: /app/images
+  - name: images-volume
+    mountPath: /app/images
 volumes:
-- name: images-volume
-  persistentVolumeClaim:
-    claimName: images-pvc
+  - name: images-volume
+    persistentVolumeClaim:
+      claimName: images-pvc
