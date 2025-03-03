@@ -31,4 +31,4 @@ config:
   - pattern: "/api/forecast"
     method:
     - "GET"
-    backend_dns: "http://forecast-back-service.pro-pokemon-weather-map-back.svc.cluster.local:8000"
+    backend_dns: "http://forecast-back-service.pro-pokemon-weather-map-back.svc.cluster.local:80"
