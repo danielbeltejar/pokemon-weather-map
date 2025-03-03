@@ -21,7 +21,7 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-set-header: X-Real-IP $remote_addr
     nginx.ingress.kubernetes.io/use-forwarded-headers: "true"
   class: "nginx"
-  host: "weather.danielbeltejar.es"
+  host: "weather.pre.server.local"
   tls: true
 config:
   routes:
