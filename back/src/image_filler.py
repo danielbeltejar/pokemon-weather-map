@@ -330,6 +330,7 @@ class ImageFiller:
         Args:
             file_path (str): The path where the image should be saved.
         """
+        self.image = self.image.resize((800, 800))
         self.image.save(file_path, format="WEBP")
         self.logger.info(f"Image saved to {file_path}")
 

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f744b349-f762-45bc-aea9-4e61eab2f831" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../apigw/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../apigw/.idea/apigw.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../apigw/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../apigw/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/pokemon_weather.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/image_filler.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/image_filler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../forecast-back/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../forecast-back/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../forecast-back/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../forecast-back/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../forecast-back/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../forecast-back/.idea/pokemon-weather-map-server.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../forecast-back/.idea/vcs.xml" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "danielbeltejar"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/danielbeltejar/pokemon-weather-map",
+    "accountId": "8c394dcb-e22e-4293-a9d5-77458087a282"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 0
+}]]></component>
+  <component name="ProjectId" id="2zXoiYoiJbuPwdTKBC49VSYTuYj" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/daniel/Documents/pokemon-weather-map/back",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-PY-251.26927.74" />
+        <option value="bundled-python-sdk-657d8234b839-64d779b69b7a-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.26927.74" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f744b349-f762-45bc-aea9-4e61eab2f831" name="Changes" comment="" />
+      <created>1751886906991</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1751886906991</updated>
+      <workItem from="1751886908122" duration="323000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
