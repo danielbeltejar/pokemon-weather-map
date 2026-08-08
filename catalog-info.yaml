@@ -1,0 +1,108 @@
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: pokemon-weather-map
+  description: Pokemon weather map application
+  annotations:
+    github.com/project-slug: danielbeltejar/pokemon-weather-map
+    backstage.io/source-location: url:https://github.com/danielbeltejar/pokemon-weather-map
+    delicias.dev/managed-by: backstage
+    delicias.dev/workload-kind: application
+    delicias.dev/application-contract: platform.delicias/v1alpha2
+    delicias.dev/delivery-chart: common-app@1.1.0
+    delicias.dev/runtime-components: apigw
+spec:
+  lifecycle: production
+  owner: group:platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: pokemon-weather-map-front
+  description: Pokemon weather map frontend
+  annotations:
+    github.com/project-slug: danielbeltejar/pokemon-weather-map
+    backstage.io/source-location: url:https://github.com/danielbeltejar/pokemon-weather-map
+    tekton.dev/pipeline: universal-monorepo
+    backstage.io/kubernetes-id: front
+    backstage.io/kubernetes-namespace: pre-pokemon-weather-map-front
+    delicias.dev/managed-by: backstage
+    delicias.dev/workload-kind: application
+    delicias.dev/application-contract: platform.delicias/v1alpha2
+    delicias.dev/deploy-kind: service
+    delicias.dev/delivery-chart: common-app@1.1.0
+  tags: [gitops, kubernetes, monorepo, common-app]
+spec:
+  type: website
+  lifecycle: production
+  owner: group:platform
+  system: pokemon-weather-map
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: pokemon-weather-map-back
+  description: Pokemon weather map refresh worker
+  annotations:
+    github.com/project-slug: danielbeltejar/pokemon-weather-map
+    backstage.io/source-location: url:https://github.com/danielbeltejar/pokemon-weather-map
+    tekton.dev/pipeline: universal-monorepo
+    backstage.io/kubernetes-id: back
+    backstage.io/kubernetes-namespace: pre-pokemon-weather-map-back
+    delicias.dev/managed-by: backstage
+    delicias.dev/workload-kind: application
+    delicias.dev/application-contract: platform.delicias/v1alpha2
+    delicias.dev/deploy-kind: worker
+    delicias.dev/delivery-chart: common-app@1.1.0
+  tags: [gitops, kubernetes, monorepo, common-app, worker]
+spec:
+  type: worker
+  lifecycle: production
+  owner: group:platform
+  system: pokemon-weather-map
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: pokemon-weather-map-forecast-back
+  description: Pokemon weather forecast API
+  annotations:
+    github.com/project-slug: danielbeltejar/pokemon-weather-map
+    backstage.io/source-location: url:https://github.com/danielbeltejar/pokemon-weather-map
+    tekton.dev/pipeline: universal-monorepo
+    backstage.io/kubernetes-id: forecast-back
+    backstage.io/kubernetes-namespace: pre-pokemon-weather-map-back
+    delicias.dev/managed-by: backstage
+    delicias.dev/workload-kind: application
+    delicias.dev/application-contract: platform.delicias/v1alpha2
+    delicias.dev/deploy-kind: service
+    delicias.dev/delivery-chart: common-app@1.1.0
+  tags: [gitops, kubernetes, monorepo, common-app]
+spec:
+  type: service
+  lifecycle: production
+  owner: group:platform
+  system: pokemon-weather-map
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: pokemon-weather-map-apigw
+  description: Pokemon weather map API gateway
+  annotations:
+    github.com/project-slug: danielbeltejar/pokemon-weather-map
+    backstage.io/source-location: url:https://github.com/danielbeltejar/pokemon-weather-map
+    backstage.io/kubernetes-id: apigw
+    backstage.io/kubernetes-namespace: pre-pokemon-weather-map-front
+    delicias.dev/managed-by: backstage
+    delicias.dev/workload-kind: application
+    delicias.dev/application-contract: platform.delicias/v1alpha2
+    delicias.dev/deploy-kind: service
+    delicias.dev/delivery-chart: common-app@1.1.0
+    delicias.dev/runtime-component: apigw
+  tags: [gitops, kubernetes, common-app, runtime]
+spec:
+  type: service
+  lifecycle: production
+  owner: group:platform
+  system: pokemon-weather-map
